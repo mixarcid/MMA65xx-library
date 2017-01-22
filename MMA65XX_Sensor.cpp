@@ -77,9 +77,10 @@ bool MMA65XX_Sensor::getEvent(sensors_event_t* evt) {
   y = transfer(CMD_AX_X | CMD_A_DATA_REQ | CMD_OC_OFFSET_CANCELLED |
 	       CMD_SD_UNSIGNED_DATA | CMD_ARM_PCM | CMD_P_ODD | CMD_NEEDED_BIT);
   x = transfer(0);
-  evt.type = SENSOR_TYPE_ACCELEROMETER;
-  evt.acceleration.x = getAccelData(x);
-  evt.acceleration.y = getAccelData(y);
+  evt->type = SENSOR_TYPE_ACCELEROMETER;
+  evt.acceleration->x = getAccelData(x);
+  evt.acceleration->y = getAccelData(y);
+  return true;
 }
 
 MMA65XX_Sensor::Msg MMA65XX_Sensor::transfer(Msg data) {
