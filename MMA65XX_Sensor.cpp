@@ -78,8 +78,8 @@ bool MMA65XX_Sensor::getEvent(sensors_event_t* evt) {
 	       CMD_SD_UNSIGNED_DATA | CMD_ARM_PCM | CMD_P_ODD | CMD_NEEDED_BIT);
   x = transfer(0);
   evt->type = SENSOR_TYPE_ACCELEROMETER;
-  evt.acceleration->x = getAccelData(x);
-  evt.acceleration->y = getAccelData(y);
+  evt->acceleration.x = getAccelData(x);
+  evt->acceleration.y = getAccelData(y);
   return true;
 }
 
