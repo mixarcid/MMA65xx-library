@@ -7,7 +7,7 @@ An implimentation of the Adafruit Unified Sensor Driver for interfacing with MMA
 
 int main() {
   Serial.begin(9600);
-  MMA65XX_Sensor sensor(2);
+  MMA65XX_Sensor sensor(SS_PIN);
   while(true) {
     sensors_event_t evt;
     sensor.getEvent(&evt);
