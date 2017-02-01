@@ -1,6 +1,6 @@
 # MMA65xx Sensor Driver
 
-An implimentation of the Adafruit Unified Sensor Driver for interfacing with MMA65xx accelerometers (http://www.adafruit.com/products/1231). It currently only gives correct data for the MMA6525KW MMA6525KWR2 sensors, but support will come soon for all the sensors in the series.
+An implimentation of the Adafruit Unified Sensor Driver for interfacing with MMA65xx accelerometers (https://github.com/adafruit/Adafruit_Sensor). It currently only gives correct data for the MMA6525KW MMA6525KWR2 sensors, but support will come soon for all the sensors in the series.
 
 ```c++
 #include <MMA65XX_Sensor.h>
