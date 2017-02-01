@@ -72,6 +72,7 @@ bool MMA65XX_Sensor::begin() {
   //Also make it give us unsigned data, because that's a bit easier to convert.
   transfer(CMD_REG_P_EVEN | CMD_REG_WRITE | DEVCFG | BIT_ENDINIT | BIT_SD);
   transfer(CMD_REG_P_EVEN | CMD_REG_READ | DEVSTAT);
+  return true;
 }
 
 bool MMA65XX_Sensor::getEvent(sensors_event_t* evt) {
