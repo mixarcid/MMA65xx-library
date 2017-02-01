@@ -1,9 +1,10 @@
 #include "MMA65XX_Sensor.h"
 #include <SPI.h>
 
-const MMA65XX_Sensor::Msg REGISTER_OFFSET = 8;
-const MMA65XX_Sensor::Msg ACCEL_OFFSET0 = 14;
-const double CONVERSION = 9.80665/18.2;
+const static MMA65XX_Sensor::Msg REGISTER_OFFSET = 8;
+const static MMA65XX_Sensor::Msg ACCEL_OFFSET0 = 14;
+const static double CONVERSION = 9.80665/18.2;
+const static double SPISettings SPI_SETTINGS(4000000, MSBFIRST, SPI_MODE0);
 
 enum CommandMsg {
   CMD_REG_P_EVEN = 1 << 15,
@@ -87,10 +88,12 @@ bool MMA65XX_Sensor::getEvent(sensors_event_t* evt) {
 MMA65XX_Sensor::Msg MMA65XX_Sensor::transfer(Msg data) {
   Msg cmd = data;
   Msg res;
+  SPI.beginTransaction(SPI_SETTINGS);
   digitalWrite(ss_pin, LOW);
   res = (SPI.transfer(byte(cmd >> 8))) << 8;
   res |= SPI.transfer(byte(cmd));
   digitalWrite(ss_pin, HIGH);
+  SPI.endTransaction();
   return res;
 }
 
