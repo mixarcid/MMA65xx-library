@@ -62,7 +62,10 @@ enum RegisterBits {
 };
 
 MMA65XX_Sensor::MMA65XX_Sensor(int _ss_pin)
-  : ss_pin(_ss_pin) {
+  : ss_pin(_ss_pin) {}
+
+bool MMA65XX_Sensor::begin() {
+  digitalWrite(ss_pin, HIGH);
   pinMode(ss_pin, OUTPUT);
   SPI.begin();
   //Ensure that device exits "initialization" phase.

@@ -10,6 +10,7 @@ class MMA65XX_Sensor {
   typedef uint16_t Msg;
  
   MMA65XX_Sensor(int _ss_pin);
+  bool begin();
   bool getEvent(sensors_event_t* evt);
 
  private:
