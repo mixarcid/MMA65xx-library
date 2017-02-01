@@ -4,7 +4,7 @@
 const static MMA65XX_Sensor::Msg REGISTER_OFFSET = 8;
 const static MMA65XX_Sensor::Msg ACCEL_OFFSET0 = 14;
 const static double CONVERSION = 9.80665/18.2;
-const static double SPISettings SPI_SETTINGS(4000000, MSBFIRST, SPI_MODE0);
+const static SPISettings SPI_SETTINGS(4000000, MSBFIRST, SPI_MODE0);
 
 enum CommandMsg {
   CMD_REG_P_EVEN = 1 << 15,
