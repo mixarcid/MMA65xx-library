@@ -15,9 +15,11 @@ class MMA65XX_Sensor {
 
  private:
   Msg transfer(Msg data);
+  bool ensureResponse(Msg msg, bool x_axis); //is the data returned valid?
   double getAccelData(Msg msg);
   void printBin(Msg num);
-  
+
+  sensors_event_t cur_event;
   int ss_pin;
   
 };

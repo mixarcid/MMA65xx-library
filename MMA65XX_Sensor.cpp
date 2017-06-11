@@ -43,7 +43,7 @@ enum ResponseMsg {
   RES_STAT_INIT = 0x00 << 10,
   RES_STAT_NORMAL = 0x01 << 10,
   RES_STAT_ST_ACTIVE = 0x02 << 10,
-  RESR_STAT_ERROR = 0x03 << 10,
+  RES_STAT_ERROR = 0x03 << 10,
   RES_STAT = 0x03 << 10,
   RES_ACCEL_DATA0 = 0x02 << ACCEL_OFFSET0,
   RES_ACCEL_DATA1 = 0x3ff
@@ -76,6 +76,7 @@ bool MMA65XX_Sensor::begin() {
 }
 
 bool MMA65XX_Sensor::getEvent(sensors_event_t* evt) {
+  
   Msg x, y;
   transfer(CMD_AX_Y | CMD_A_DATA_REQ | CMD_OC_OFFSET_CANCELLED |
 	   CMD_SD_UNSIGNED_DATA | CMD_ARM_PCM | CMD_P_EVEN | CMD_NEEDED_BIT);
@@ -83,9 +84,12 @@ bool MMA65XX_Sensor::getEvent(sensors_event_t* evt) {
   transfer(CMD_AX_X | CMD_A_DATA_REQ | CMD_OC_OFFSET_CANCELLED |
 	       CMD_SD_UNSIGNED_DATA | CMD_ARM_PCM | CMD_P_ODD | CMD_NEEDED_BIT);
   x = transfer(0);
+  
   evt->type = SENSOR_TYPE_ACCELEROMETER;
-  evt->acceleration.x = getAccelData(x);
-  evt->acceleration.y = getAccelData(y);
+  evt->acceleration.x = ensureResponse(x, true) ? getAccelData(x) : cur_event.acceleration.x;
+  evt->acceleration.y =  ensureResponse(y, false) ? getAccelData(y) : cur_event.acceleration.y;
+
+  cur_event = *evt;
   return true;
 }
 
@@ -99,6 +103,23 @@ MMA65XX_Sensor::Msg MMA65XX_Sensor::transfer(Msg data) {
   digitalWrite(ss_pin, HIGH);
   SPI.endTransaction();
   return res;
+}
+
+static bool parityOdd(MMA65XX_Sensor::Msg msg) {
+  unsigned char count = 0;
+  for (MMA65XX_Sensor::Msg mask = 1; mask > 0; mask <<= 1) {
+    if (msg & mask) ++count;
+  }
+  return (count % 2);
+}
+
+bool MMA65XX_Sensor::ensureResponse(Msg msg, bool x_axis) {
+
+  Msg is_y = msg & RES_AX_Y;
+  if ((is_y && x_axis) || (!is_y && !x_axis)) return false;
+  if (!(msg & RES_STAT_NORMAL) || (msg & RES_STAT_ST_ACTIVE)) return false;
+  return parityOdd(msg);
+  
 }
 
 double MMA65XX_Sensor::getAccelData(Msg msg) {
